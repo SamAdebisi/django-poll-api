@@ -1,12 +1,17 @@
 from django.urls import path, include
 from rest_framework.authtoken import views
 
+from rest_framework_swagger.views import get_swagger_view
+from rest_framework.documentation import include_docs_urls
+
 from .apiviews import (
     PollList, PollDetail,
     ChoiceList, CreateVote,
     PollViewSet, UserCreate, LoginView,
 )
 from rest_framework.routers import DefaultRouter
+
+schema_view = get_swagger_view(title='Polls API')
 
 router = DefaultRouter()
 router.register('polls', PollViewSet, basename='polls')
@@ -33,6 +38,10 @@ urlpatterns = [
          CreateVote.as_view(), name="create_vote"),
 
     path('users/', UserCreate.as_view(), name="user_create"),
+
+    path('swagger-docs/', schema_view),
+
+    path('docs/', include_docs_urls(title='Polls API')),
 ]
 
 urlpatterns += router.urls
